@@ -2210,7 +2210,7 @@ function addAveria(){
   closeAddModal();
   showToast(`✓ Avería ${patente} agregada — guardando en Sheet...`);
   // Construir fila para el Sheet (orden de columnas de AVERIAS)
-  const sheetRow = [
+  sheetRow = [
     document.getElementById('fa-canal').value, // A canal
     document.getElementById('fa-asesor').value, // B asesor
     patente,           // C patente
