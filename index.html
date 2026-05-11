@@ -1918,7 +1918,41 @@ function addAveria(){
   document.getElementById('badge-bitacora').textContent=ALL.length.toLocaleString('es-CL');
   buildBSelects();applyB();buildGSelects();applyG();
   closeAddModal();
-  showToast(`✓ Avería ${patente} agregada correctamente`);
+  showToast(`✓ Avería ${patente} agregada — guardando en Sheet...`);
+  // Construir fila para el Sheet (orden de columnas de AVERIAS)
+  const sheetRow = [
+    document.getElementById('fa-canal').value, // A canal
+    document.getElementById('fa-asesor').value, // B asesor
+    patente,           // C patente
+    '',                // D fecha llamado
+    '',                // E ejecutivo SAC
+    fmtFecha,          // F fecha inicio contrato
+    '','','',          // G H I
+    parseInt(document.getElementById('fa-contrato').value)||'', // J contrato
+    document.getElementById('fa-producto').value, // K producto
+    (document.getElementById('fa-concesionario').value||'').toUpperCase(), // L concesionario
+    (document.getElementById('fa-ciudad').value||'').toUpperCase(), // M ciudad
+    '','','',          // N O P
+    document.getElementById('fa-averia')?.value||'', // Q averia declarada
+    '','','',          // R S T
+    fmtFecha,          // U fecha ingreso a taller
+    marca, modelo,     // V W
+    (document.getElementById('fa-ciudad').value||'').toUpperCase(), // X ciudad taller
+    (document.getElementById('fa-taller').value||'').toUpperCase(), // Y taller
+    '','',             // Z AA
+    estado,            // AB estado
+    '',                // AC comentarios
+    '',                // AD fecha resolucion
+    parseInt(document.getElementById('fa-naveria').value)||'', // AE n averia
+    '','','','','',    // AF-AJ
+    mo, rep, neto, 0, 0, 0, bruto, // AK-AQ montos
+    document.getElementById('fa-resol')?.value||'', // AR resolucion
+    ''                 // AS motivo
+  ];
+  pushRowToSheet(sheetRow).then(ok => {
+    if(ok) showToast(`✓ Avería ${patente} guardada en Google Sheets`);
+    else showToast(`⚠ Avería agregada localmente pero no se pudo guardar en Sheet`, false);
+  });
 }
 
 // ════════════════════════════════════════
@@ -1954,45 +1988,113 @@ document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeDModal();close
 // 4. Copia la URL y reemplaza el valor de SHEET_URL abajo
 // ══════════════════════════════════════════════════════════════
 const SHEET_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQi_1JZDEKf17v2JuKF1H2d8mRjmHSLW3KOJg40GvTsVOINj-JPfLsWKiGd_kHjSw/pub?gid=1559114038&single=true&output=csv';
+const API_URL = 'https://script.google.com/macros/s/AKfycbzTNER80HWMUPp1TFjwoWQwt2NfB4D5knq3AAQ1rZnQTIGXAQAipb-xsQcayvYyaSLb/exec';
 
 // ══════════════════════════════════════════════════════
 // CARGA DINÁMICA DESDE GOOGLE SHEETS
 // ══════════════════════════════════════════════════════
 async function loadFromSheet(url) {
-  if (!url || url.trim() === '') {
-    showSheetError('No hay URL configurada');
-    return;
-  }
   showLoadingScreen(true, 'Conectando con Google Sheets...');
-
-  // Intentar fetch directo primero; si falla por CORS usar proxy
-  const tryFetch = async (u) => {
-    const res = await fetch(u);
-    if (!res.ok) throw new Error('HTTP ' + res.status);
-    return await res.text();
-  };
-
   try {
-    let text;
-    try {
-      text = await tryFetch(url);
-    } catch(e) {
-      // Fallback: proxy CORS público
-      showLoadingScreen(true, 'Usando proxy CORS...');
-      const proxy = 'https://corsproxy.io/?' + encodeURIComponent(url);
-      text = await tryFetch(proxy);
-    }
-    showLoadingScreen(true, 'Procesando datos...');
-    const rows = parseCSV(text);
-    if (rows.length < 2) throw new Error('Sin datos');
-    ALL = mapColumns(rows);
+    // Usar Apps Script API (soporta CORS y escritura)
+    const res = await fetch(API_URL);
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    const json = await res.json();
+    if (json.status !== 'ok') throw new Error(json.msg || 'Error en API');
+    showLoadingScreen(true, 'Procesando ' + json.data.length + ' registros...');
+    ALL = mapColumnsFromAPI(json.data);
     showLoadingScreen(false);
     document.getElementById('sheet-last-update').textContent =
       'Actualizado: ' + new Date().toLocaleTimeString('es-CL');
     init();
   } catch(e) {
-    showLoadingScreen(false);
-    showSheetError(e.message);
+    // Fallback: CSV directo
+    try {
+      showLoadingScreen(true, 'Intentando CSV directo...');
+      const res2 = await fetch(url);
+      const text = await res2.text();
+      const rows = parseCSV(text);
+      if (rows.length < 2) throw new Error('Sin datos');
+      ALL = mapColumns(rows);
+      showLoadingScreen(false);
+      document.getElementById('sheet-last-update').textContent =
+        'Actualizado: ' + new Date().toLocaleTimeString('es-CL');
+      init();
+    } catch(e2) {
+      showLoadingScreen(false);
+      showSheetError(e.message + ' / ' + e2.message);
+    }
+  }
+}
+
+// Mapear datos desde Apps Script (vienen como objetos con headers como keys)
+function mapColumnsFromAPI(rows) {
+  const nu = v => String(v||'').trim().toUpperCase();
+  const fd = v => {
+    if (!v) return '';
+    if (v instanceof Date) {
+      return v.toLocaleDateString('es-CL',{day:'2-digit',month:'2-digit',year:'numeric'});
+    }
+    return String(v).trim();
+  };
+  const cm = v => {
+    const s = String(v||'').replace(/[$\s]/g,'').trim();
+    if (!s||s==='-') return 0;
+    let clean = s;
+    if (/,\d{1,2}$/.test(clean)) clean = clean.replace(/\./g,'').replace(',','.');
+    else clean = clean.replace(/\./g,'');
+    const n = parseFloat(clean);
+    return isNaN(n) ? 0 : Math.round(Math.max(0,n));
+  };
+
+  return rows.map(r => {
+    const ni = cm(r['VALOR NETO INICIAL']);
+    const nd = cm(r['VALOR NETO CON DESCUENTOS']||r['VALOR NETO CON DESCUENTO']);
+    const neto = nd > 0 ? nd : ni;
+    const nav = String(r['N° AVERIA']||'').match(/\d+/);
+    const cont = String(r['CONTRATO']||'').match(/\d+/);
+    return [
+      nu(r['CANAL DE INGRESO']),      // 0 canal
+      nu(r['ASESORES']),              // 1 asesor
+      nu(r['PATENTE']),               // 2 patente
+      fd(r['FECHA INGRESO A TALLER']||r['FECHA INICIO CONTRATO']||r['FECHA LLAMADO O CORREO']), // 3 fecha
+      nu(r['MARCA']),                 // 4 marca
+      nu(r['MODELO']),                // 5 modelo
+      nu(r['CIUDAD TALLER']||r['CIUDAD']), // 6 ciudad
+      nu(r['TALLER AGENDAMIENTO']||r['TALLER']), // 7 taller
+      nu(r['ESTADO AVERIA']||r['ESTADO']).trim(), // 8 estado
+      nu(r['RESOLUCION']||r['RESOLUCIÓN']), // 9 resol
+      nu(r['CONCESIONARIO']),         // 10 concesionario
+      nu(r['PRODUCTO']),              // 11 producto
+      nav ? parseInt(nav[0]) : '',    // 12 n_averia
+      cont ? parseInt(cont[0]) : '',  // 13 contrato
+      cm(r['MANO DE OBRA']),          // 14 MO
+      cm(r['REPUESTOS']),             // 15 REP
+      neto,                           // 16 valor neto
+      cm(r['IVA']),                   // 17 IVA
+      cm(r['TOTAL BRUTO']),           // 18 bruto
+      String(r['AVERIA DECLARADA']||r['AVERÍA DECLARADA']||''), // 19
+      String(r['COMENTARIOS']||''),   // 20
+      nu(r['MOTIVO RECHAZO']||r['MOTIVO']||''), // 21
+      ni,                             // 22 neto inicial
+    ];
+  }).filter(r => r[2] && r[2].length >= 3);
+}
+
+// Función para agregar avería al Sheet via Apps Script
+async function pushRowToSheet(rowArray) {
+  try {
+    // Usar GET con parámetros para evitar CORS en POST
+    const params = new URLSearchParams({
+      action: 'add',
+      row: JSON.stringify(rowArray)
+    });
+    const res = await fetch(API_URL + '?' + params.toString());
+    const json = await res.json();
+    return json.status === 'ok';
+  } catch(e) {
+    console.error('Error guardando en Sheet:', e);
+    return false;
   }
 }
 
