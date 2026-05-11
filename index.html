@@ -783,7 +783,7 @@ tbody td.money.big{color:var(--ok);font-size:13px}
 
 <!-- MODAL AGREGAR AVERÍA -->
 <div id="ov-a" onclick="closeAov(event)">
-  <div id="modal-a">
+  <div id="modal-a" style="max-width:900px;width:95%;max-height:90vh;overflow-y:auto">
     <div class="ma-head">
       <button class="m-close" onclick="closeAddModal()">✕</button>
       <h3>➕ Agregar Nueva Avería</h3>
@@ -791,10 +791,63 @@ tbody td.money.big{color:var(--ok);font-size:13px}
     </div>
     <div class="ma-body">
       <div class="form-grid">
-        <div class="form-section">Identificación</div>
-        <div class="fg-form"><label>Patente <span class="req">*</span></label><input type="text" id="fa-patente" placeholder="Ej: GZDG30" maxlength="8" style="text-transform:uppercase"></div>
-        <div class="fg-form"><label>N° Avería</label><input type="number" id="fa-naveria" placeholder="Ej: 3950"></div>
-        <div class="fg-form"><label>Contrato</label><input type="number" id="fa-contrato" placeholder="Ej: 15234"></div>
+
+        <!-- SECCIÓN 1: IDENTIFICACIÓN -->
+        <div class="form-section" style="grid-column:1/-1">📋 Identificación</div>
+
+        <div class="fg-form"><label>Canal de Ingreso <span class="req">*</span></label>
+          <select id="fa-canal">
+            <option value="">Seleccionar...</option>
+            <option>CALL CENTER</option><option>AVERIAS</option><option>COMERCIAL</option>
+          </select>
+        </div>
+
+        <div class="fg-form"><label>Asesor <span class="req">*</span></label>
+          <select id="fa-asesor">
+            <option value="">Seleccionar...</option>
+            <option>ROBERTO CHANDIA</option><option>FRANCISCO VEAS</option><option>VICENTE SANHUEZA</option>
+          </select>
+        </div>
+
+        <div class="fg-form"><label>Patente <span class="req">*</span></label>
+          <input type="text" id="fa-patente" placeholder="Ej: GZDG30" maxlength="8" style="text-transform:uppercase">
+        </div>
+
+        <div class="fg-form"><label>Fecha Llamado o Correo</label>
+          <input type="date" id="fa-fecha-llamado">
+        </div>
+
+        <div class="fg-form"><label>Ejecutivo SAC</label>
+          <select id="fa-ejecutivo">
+            <option value="">Seleccionar...</option>
+            <option>KATHERINE ARAVENA</option><option>YASNA HERMOSILLA</option>
+            <option>ROBERTO CHANDIA</option><option>PALOMA ESCOBEDO</option>
+            <option>PABLO LOBOS</option><option>VALENTINA PALMEIRO</option>
+            <option>MARCELO TOLEDO</option><option>LUIS MARIN</option>
+            <option>VICENTE SANHUEZA</option><option>FRANCISCO VEAS</option>
+          </select>
+        </div>
+
+        <div class="fg-form"><label>Fecha Inicio Contrato</label>
+          <input type="date" id="fa-fecha-contrato">
+        </div>
+
+        <div class="fg-form"><label>Meses entre Avería y Venta</label>
+          <input type="number" id="fa-meses" placeholder="Ej: 6" min="0">
+        </div>
+
+        <div class="fg-form"><label>Días entre Avería y Venta</label>
+          <input type="number" id="fa-dias" placeholder="Ej: 180" min="0">
+        </div>
+
+        <div class="fg-form"><label>KMS Inicio Contrato</label>
+          <input type="number" id="fa-kms" placeholder="Ej: 50000" min="0">
+        </div>
+
+        <div class="fg-form"><label>N° Contrato</label>
+          <input type="number" id="fa-contrato" placeholder="Ej: 15234">
+        </div>
+
         <div class="fg-form"><label>Producto</label>
           <select id="fa-producto">
             <option value="">Seleccionar...</option>
@@ -802,29 +855,144 @@ tbody td.money.big{color:var(--ok);font-size:13px}
           </select>
         </div>
 
-        <div class="form-section">Vehículo</div>
-        <div class="fg-form"><label>Marca <span class="req">*</span></label>
-          <select id="fa-marca"><option value="">Seleccionar...</option></select>
+        <div class="fg-form"><label>Concesionario</label>
+          <select id="fa-concesionario">
+            <option value="">Seleccionar...</option>
+            <option>SALAZAR_ISRAEL</option><option>PORTILLO</option><option>COSECHE</option>
+            <option>CASTEX</option><option>MONTEMAR</option><option>LE MANS</option>
+            <option>AOTOMOTRIZ MV</option><option>AUTOMOTORA VICENTE CASSANO</option>
+            <option>INALCAR</option><option>BR AUTOS</option><option>SERVIMAQ</option>
+            <option>LIMITED MOTORS</option><option>GUILLERMO MORALES</option>
+            <option>ASTARA</option><option>AVENTURA</option>
+          </select>
         </div>
-        <div class="fg-form"><label>Modelo <span class="req">*</span></label><input type="text" id="fa-modelo" placeholder="Ej: Hilux, Corolla..."></div>
 
-        <div class="form-section">Avería</div>
-        <div class="fg-form"><label>Fecha de ingreso <span class="req">*</span></label><input type="date" id="fa-fecha"></div>
-        <div class="fg-form"><label>Canal de ingreso</label>
-          <select id="fa-canal">
+        <div class="fg-form"><label>Punto de Venta</label>
+          <input type="text" id="fa-punto-venta" placeholder="Ej: PABLO NERUDA">
+        </div>
+
+        <div class="fg-form"><label>Kilometraje Actual</label>
+          <input type="number" id="fa-km-actual" placeholder="Ej: 85000" min="0">
+        </div>
+
+        <div class="fg-form"><label>Solicitar Comprobantes Mantención</label>
+          <select id="fa-sol-comp">
             <option value="">Seleccionar...</option>
-            <option>CALL CENTER</option><option>COMERCIAL</option><option>CLIENTE</option>
-            <option>TALLER</option><option>AVERIAS</option><option>OTRO</option>
+            <option>SI</option><option>NO</option>
           </select>
         </div>
-        <div class="fg-form"><label>Asesor a cargo</label>
-          <select id="fa-asesor">
+
+        <div class="fg-form"><label>Comprobantes Mantención o KM</label>
+          <select id="fa-comp">
             <option value="">Seleccionar...</option>
-            <option>ROBERTO CHANDÍA</option><option>VICENTE SANHUEZA</option>
-            <option>FRANCISCO VEAS</option><option>PABLO LOBOS</option><option>LUIS MARÍN</option>
+            <option>KILOMETRAJE RECIBIDO</option><option>MANTENCIÓN RECIBIDO</option>
+            <option>AMBOS RECIBIDOS</option><option>NO ES NECESARIO</option>
+            <option>PENDIENTE</option><option>NO ENTREGADO</option>
           </select>
         </div>
-        <div class="fg-form"><label>Estado avería <span class="req">*</span></label>
+
+        <!-- SECCIÓN 2: AVERÍA -->
+        <div class="form-section" style="grid-column:1/-1">🔧 Avería</div>
+
+        <div class="fg-form" style="grid-column:1/-1"><label>Avería Principal Declarada por Cliente</label>
+          <select id="fa-averia">
+            <option value="">Seleccionar...</option>
+            <option>AIRBAG</option><option>AIRE ACONDICIONADO</option>
+            <option>BOMBA HIDRAULICA</option><option>CAJA DE CAMBIO</option>
+            <option>CAMARA DE RETROCESO</option><option>CHECK ENGINE</option>
+            <option>CHECK ENGINE ENCENDIDO</option><option>CIERRE CENTRALIZADO</option>
+            <option>COMPRESOR DE AIRE ACONDICIONADO</option><option>CONSUMO DE ACEITE MOTOR</option>
+            <option>CONVERSOR DE TORQUE</option><option>CREMALLERA DIRECCION</option>
+            <option>FALLA DE MOTOR</option><option>FOCO DELANTERO</option>
+            <option>FRENOS</option><option>FUGA DE ACEITE</option>
+            <option>MARCADOR DE BENCINA</option><option>MOTOR CON PROBLEMAS DE TEMPERATURA</option>
+            <option>MOTOR NO ARRANCA</option><option>NO PASA CAMBIOS, VEHICULO NO SE MUEVE</option>
+            <option>NO TIENE POTENCIA Y PROBLEMAS CON REVERSA</option>
+            <option>PERDIDA DE AGUA EN EL MOTOR</option><option>PERDIDA DE FUERZA</option>
+            <option>PROBLEMAS CON PEDAL AL FRENAR</option><option>PROBLEMAS CON LA VELOCIDAD CRUCERO</option>
+            <option>PROBLEMAS CON MARCADOR DE BENCINA EN TABLERO</option>
+            <option>PROBLEMAS CON RADIADOR</option><option>PROBLEMAS DE ACELERACION</option>
+            <option>PROBLEMAS DE DIRECCION</option><option>PROBLEMAS DE FRENOS</option>
+            <option>PROBLEMAS DE TEMPERATURA</option><option>PROBLEMAS DIRECCION ELECTRO ASISTIDA</option>
+            <option>REVISION DE FRENOS Y EMBRAGUES</option><option>RUIDO EN LOS AMORTIGUADORES</option>
+            <option>RUIDO EN MOTOR</option><option>RUIDO EN RUEDA DERECHA</option>
+            <option>SENSOR DE OXIGENO</option><option>TESTIGO LLAVE EN TABLERO</option>
+            <option>VEHICULO NO PRENDE</option><option>VEHICULO SE DETIENE</option>
+            <option>VEHICULO SONIDO EXTRAÑO</option><option>VIBRACION AL FRENAR</option>
+            <option>OTRO</option>
+          </select>
+        </div>
+
+        <div class="fg-form"><label>Estado Agendamiento</label>
+          <select id="fa-est-agenda">
+            <option value="">Seleccionar...</option>
+            <option>PENDIENTE POR ESPERA DE DOC</option><option>PENDIENTE POR FALTA AGENDA</option>
+            <option>AGENDADO</option><option>PENDIENTE CONFIRMACION DE CLIENTE</option>
+          </select>
+        </div>
+
+        <div class="fg-form"><label>Fecha Ingreso a Taller <span class="req">*</span></label>
+          <input type="date" id="fa-fecha">
+        </div>
+
+        <!-- SECCIÓN 3: VEHÍCULO -->
+        <div class="form-section" style="grid-column:1/-1">🚗 Vehículo</div>
+
+        <div class="fg-form"><label>Marca <span class="req">*</span></label>
+          <select id="fa-marca">
+            <option value="">Seleccionar...</option>
+            <option>AUDI</option><option>BAIC</option><option>BMW</option>
+            <option>CHANGAN</option><option>CHERY</option><option>CHEVROLET</option>
+            <option>CITROEN</option><option>DODGE</option><option>DONGFENG</option>
+            <option>FIAT</option><option>FORD</option><option>FOTON</option>
+            <option>GEELY</option><option>GREAT WALL</option><option>HAVAL</option>
+            <option>HONDA</option><option>HYUNDAI</option><option>INFINITI</option>
+            <option>JAC</option><option>JAGUAR</option><option>JEEP</option>
+            <option>JETOUR</option><option>KIA MOTORS</option><option>LAND ROVER</option>
+            <option>LEXUS</option><option>MAHINDRA</option><option>MAXUS</option>
+            <option>MAZDA</option><option>MERCEDES BENZ</option><option>MG</option>
+            <option>MINI</option><option>MITSUBISHI</option><option>NISSAN</option>
+            <option>OPEL</option><option>PEUGEOT</option><option>PORSCHE</option>
+            <option>RAM</option><option>RENAULT</option><option>SEAT</option>
+            <option>SKODA</option><option>SSANGYONG</option><option>SUBARU</option>
+            <option>SUZUKI</option><option>TOYOTA</option><option>VOLKSWAGEN</option>
+            <option>VOLVO</option>
+          </select>
+        </div>
+
+        <div class="fg-form"><label>Modelo <span class="req">*</span></label>
+          <input type="text" id="fa-modelo" placeholder="Ej: Corolla, Mazda 3...">
+        </div>
+
+        <div class="fg-form"><label>Ciudad Taller</label>
+          <select id="fa-ciudad">
+            <option value="">Seleccionar...</option>
+            <option>SANTIAGO</option><option>CONCEPCION</option><option>TEMUCO</option>
+            <option>CHILLAN</option><option>TALCA</option><option>LA SERENA</option>
+            <option>COQUIMBO</option><option>OSORNO</option><option>VALDIVIA</option>
+            <option>LOS ANGELES</option><option>VIÑA DEL MAR</option><option>RANCAGUA</option>
+            <option>COPIAPO</option><option>SAN FELIPE</option><option>LINARES</option>
+            <option>COYHAIQUE</option><option>CASTRO</option><option>PUERTO MONTT</option>
+            <option>OTRO</option>
+          </select>
+        </div>
+
+        <div class="fg-form"><label>Taller Agendamiento</label>
+          <input type="text" id="fa-taller" placeholder="Ej: DERCO, PORTILLO...">
+        </div>
+
+        <div class="fg-form"><label>Ubicación Taller</label>
+          <input type="text" id="fa-ubicacion" placeholder="Ej: BILBAO, PAICAVI...">
+        </div>
+
+        <div class="fg-form"><label>Sistema Involucrado</label>
+          <input type="text" id="fa-sistema" placeholder="Ej: Motor, Suspensión...">
+        </div>
+
+        <!-- SECCIÓN 4: ESTADO Y RESOLUCIÓN -->
+        <div class="form-section" style="grid-column:1/-1">📊 Estado y Resolución</div>
+
+        <div class="fg-form"><label>Estado Avería <span class="req">*</span></label>
           <select id="fa-estado">
             <option value="">Seleccionar...</option>
             <option>DIAG</option><option>T</option><option>P</option>
@@ -833,23 +1001,98 @@ tbody td.money.big{color:var(--ok);font-size:13px}
             <option>S/I</option><option>S/A</option><option>PD</option>
           </select>
         </div>
-        <div class="fg-form full"><label>Avería declarada por el cliente</label><textarea id="fa-averia" placeholder="Describe la avería reportada por el cliente..."></textarea></div>
 
-        <div class="form-section">Taller</div>
-        <div class="fg-form"><label>Concesionario</label><input type="text" id="fa-concesionario" placeholder="Ej: SALAZAR ISRAEL"></div>
-        <div class="fg-form"><label>Taller asignado</label><input type="text" id="fa-taller" placeholder="Ej: WILLIAMSON BALFOUR"></div>
-        <div class="fg-form"><label>Ciudad taller</label><input type="text" id="fa-ciudad" placeholder="Ej: SANTIAGO"></div>
+        <div class="fg-form" style="grid-column:span 2"><label>Comentarios, último contacto</label>
+          <textarea id="fa-comentarios" placeholder="Comentarios..." rows="2" style="width:100%;resize:vertical;padding:8px;border:1px solid #dde5d8;border-radius:6px;font-family:inherit;font-size:12px"></textarea>
+        </div>
 
-        <div class="form-section">Valores (opcional)</div>
-        <div class="fg-form"><label>Mano de obra ($)</label><input type="number" id="fa-mo" placeholder="0" min="0"></div>
-        <div class="fg-form"><label>Repuestos ($)</label><input type="number" id="fa-rep" placeholder="0" min="0"></div>
-        <div class="fg-form"><label>Valor neto ($)</label><input type="number" id="fa-neto" placeholder="0" min="0"></div>
-        <div class="fg-form"><label>Total bruto ($)</label><input type="number" id="fa-bruto" placeholder="0" min="0"></div>
+        <div class="fg-form"><label>Fechas Envío Resolución</label>
+          <input type="date" id="fa-fecha-resol">
+        </div>
+
+        <div class="fg-form"><label>N° Avería</label>
+          <input type="number" id="fa-naveria" placeholder="Ej: 4095">
+        </div>
+
+        <div class="fg-form"><label>N° ATC</label>
+          <input type="text" id="fa-natc" placeholder="Ej: ATC-001">
+        </div>
+
+        <div class="fg-form"><label>Fecha Recepción Evidencias</label>
+          <input type="date" id="fa-fecha-evid">
+        </div>
+
+        <div class="fg-form"><label>Evidencias</label>
+          <select id="fa-evidencias">
+            <option value="">Seleccionar...</option>
+            <option>SI</option><option>NO</option><option>PENDIENTE</option>
+          </select>
+        </div>
+
+        <div class="fg-form"><label>Informe Técnico</label>
+          <select id="fa-informe">
+            <option value="">Seleccionar...</option>
+            <option>SI</option><option>NO</option><option>PENDIENTE</option>
+          </select>
+        </div>
+
+        <div class="fg-form"><label>Presupuesto</label>
+          <select id="fa-presupuesto">
+            <option value="">Seleccionar...</option>
+            <option>SI</option><option>NO</option><option>PENDIENTE</option>
+          </select>
+        </div>
+
+        <!-- SECCIÓN 5: MONTOS -->
+        <div class="form-section" style="grid-column:1/-1">💰 Montos</div>
+
+        <div class="fg-form"><label>Mano de Obra ($)</label>
+          <input type="number" id="fa-mo" placeholder="Ej: 150000" min="0">
+        </div>
+        <div class="fg-form"><label>Repuestos ($)</label>
+          <input type="number" id="fa-rep" placeholder="Ej: 80000" min="0">
+        </div>
+        <div class="fg-form"><label>Valor Neto Inicial ($)</label>
+          <input type="number" id="fa-neto-ini" placeholder="Ej: 230000" min="0">
+        </div>
+        <div class="fg-form"><label>Valor Neto con Descuentos ($)</label>
+          <input type="number" id="fa-neto" placeholder="Ej: 200000" min="0">
+        </div>
+        <div class="fg-form"><label>Gestión Descuentos</label>
+          <select id="fa-descuento">
+            <option value="">Seleccionar...</option>
+            <option>SI</option><option>NO</option>
+          </select>
+        </div>
+        <div class="fg-form"><label>IVA ($)</label>
+          <input type="number" id="fa-iva" placeholder="Ej: 43700" min="0">
+        </div>
+        <div class="fg-form"><label>Total Bruto ($)</label>
+          <input type="number" id="fa-bruto" placeholder="Ej: 273700" min="0">
+        </div>
+
+        <div class="fg-form"><label>Resolución</label>
+          <select id="fa-resol">
+            <option value="">Seleccionar...</option>
+            <option>APROBADA</option><option>RECHAZADA</option><option>ATC</option>
+          </select>
+        </div>
+
+        <div class="fg-form"><label>Motivo Rechazo</label>
+          <select id="fa-motivo">
+            <option value="">Seleccionar...</option>
+            <option>NO APLICA</option><option>COMPONENTE NO INCLUIDO</option>
+            <option>DAÑO POR MAL USO</option><option>SIN MANTENCION</option>
+            <option>KILOMETRAJE EXCEDIDO</option><option>INTERVENCION NO AUTORIZADA</option>
+            <option>OTRO</option>
+          </select>
+        </div>
+
       </div>
-      <div class="form-actions">
-        <button class="btn-cancel" onclick="closeAddModal()">Cancelar</button>
-        <button class="btn-submit" onclick="addAveria()">✓ &nbsp;Agregar Avería</button>
-      </div>
+    </div>
+    <div class="ma-foot">
+      <button class="btn-cancel" onclick="closeAddModal()">Cancelar</button>
+      <button class="btn-submit" onclick="addAveria()">✓ &nbsp;Agregar Avería</button>
     </div>
   </div>
 </div>
@@ -1894,23 +2137,70 @@ function addAveria(){
   if(!patente||!estado||!marca||!modelo||!fecha){
     showToast('⚠ Completa los campos obligatorios (Patente, Estado, Marca, Modelo, Fecha)',false);return;
   }
-  const fmtFecha=fecha?new Date(fecha+' 12:00').toLocaleDateString('es-CL',{day:'2-digit',month:'2-digit',year:'numeric'}):'';
-  const mo=parseFloat(document.getElementById('fa-mo').value)||0;
-  const rep=parseFloat(document.getElementById('fa-rep').value)||0;
-  const neto=parseFloat(document.getElementById('fa-neto').value)||0;
-  const bruto=parseFloat(document.getElementById('fa-bruto').value)||0;
+  const fmt=d=>d?new Date(d+' 12:00').toLocaleDateString('es-CL',{day:'2-digit',month:'2-digit',year:'numeric'}):'';
+  const gv=id=>{const el=document.getElementById(id);return el?el.value||'':''};
+  const gn=id=>parseFloat(gv(id))||0;
+
+  const mo=gn('fa-mo'), rep=gn('fa-rep');
+  const netoIni=gn('fa-neto-ini'), neto=gn('fa-neto')||netoIni;
+  const iva=gn('fa-iva'), bruto=gn('fa-bruto');
+
+  // Array con 44 columnas exactas del Sheet (A→AR)
+  const sheetRow = [
+    gv('fa-canal'),           // A  CANAL DE INGRESO
+    gv('fa-asesor'),          // B  ASESORES
+    patente,                  // C  PATENTE
+    fmt(gv('fa-fecha-llamado')), // D FECHA LLAMADO O CORREO
+    gv('fa-ejecutivo'),       // E  EJECUTIVO SAC
+    fmt(gv('fa-fecha-contrato')), // F FECHA INICIO CONTRATO
+    gn('fa-meses'),           // G  MESES ENTRE AVERIA Y VENTA
+    gn('fa-dias'),            // H  DIAS ENTRE AVERIA Y VENTA
+    gn('fa-kms'),             // I  KMS INICIO CONTRATO
+    gn('fa-contrato'),        // J  CONTRATO
+    gv('fa-producto'),        // K  PRODUCTO
+    gv('fa-concesionario'),   // L  CONCESIONARIO
+    gv('fa-punto-venta'),     // M  PUNTO DE VENTA
+    gn('fa-km-actual'),       // N  KILOMETRAJE ACTUAL
+    gv('fa-sol-comp'),        // O  SOLICITAR COMPROBANTES
+    gv('fa-comp'),            // P  COMPROBANTES MANTENCION O KM
+    gv('fa-averia'),          // Q  AVERIA PRINCIPAL DECLARADA
+    '',                       // R  X
+    gv('fa-est-agenda'),      // S  ESTADO AGENDAMIENTO
+    fmt(fecha),               // T  FECHA INGRESO A TALLER
+    marca,                    // U  MARCA
+    modelo,                   // V  MODELO
+    gv('fa-ciudad'),          // W  CIUDAD TALLER
+    gv('fa-taller'),          // X  TALLER AGENDAMIENTO
+    gv('fa-ubicacion'),       // Y  UBICACIÓN TALLER
+    gv('fa-sistema'),         // Z  SISTEMA INVOLUCRADO
+    estado,                   // AA ESTADO AVERÍA
+    gv('fa-comentarios'),     // AB COMENTARIOS
+    fmt(gv('fa-fecha-resol')), // AC FECHAS ENVIO RESOLUCION
+    gn('fa-naveria'),         // AD N° AVERIA
+    gv('fa-natc'),            // AE N° ATC
+    '',                       // AF (vacío)
+    fmt(gv('fa-fecha-evid')), // AG FECHA RECEPCIÓN EVIDENCIAS
+    gv('fa-evidencias'),      // AH EVIDENCIAS
+    gv('fa-informe'),         // AI INFORME TECNICO
+    gv('fa-presupuesto'),     // AJ PRESUPUESTO
+    mo,                       // AK MANO DE OBRA
+    rep,                      // AL REPUESTOS
+    netoIni,                  // AM VALOR NETO INICIAL
+    neto,                     // AN VALOR NETO CON DESCUENTOS
+    gv('fa-descuento'),       // AO GESTIÓN DESCUENTOS
+    iva,                      // AP IVA
+    bruto,                    // AQ TOTAL BRUTO
+    gv('fa-resol'),           // AR RESOLUCION
+    gv('fa-motivo'),          // AS MOTIVO RECHAZO
+  ];
+
+  // Para la tabla local usamos el formato interno
   const nReg=[
-    document.getElementById('fa-canal').value,
-    document.getElementById('fa-asesor').value,
-    patente,fmtFecha,marca,modelo,
-    (document.getElementById('fa-ciudad').value||'').toUpperCase(),
-    (document.getElementById('fa-taller').value||'').toUpperCase(),
-    estado,'',
-    (document.getElementById('fa-concesionario').value||'').toUpperCase(),
-    document.getElementById('fa-producto').value,
-    parseInt(document.getElementById('fa-naveria').value)||'',
-    parseInt(document.getElementById('fa-contrato').value)||'',
-    mo,rep,neto,0,bruto
+    gv('fa-canal'), gv('fa-asesor'), patente, fmt(fecha), marca, modelo,
+    gv('fa-ciudad'), gv('fa-taller'), estado, gv('fa-resol'),
+    gv('fa-concesionario'), gv('fa-producto'),
+    gn('fa-naveria'), gn('fa-contrato'),
+    mo, rep, neto, iva, bruto
   ];
   ALL.unshift(nReg);
   document.getElementById('hdr-total').textContent=ALL.length.toLocaleString('es-CL');
